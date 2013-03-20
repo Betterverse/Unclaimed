@@ -21,7 +21,6 @@ public class UnclaimedCommmand implements CommandExecutor {
 
     //cache of recently found chunks. if a teleport request finds a chunk before it reaches its search limit,
     //it will continue until it hits the search limit or until the cache reaches a size of 20.
-
     //if a chunk is pulled from the cache on request, the search will not commence.
     //CURRENTLY NOT IMPLEMENTED. NOTE TO FUTURE DEVS:
     //IF THIS MESSAGE REMAINS AFTER 20/02/2013, FEEL FREE TO DELETE THE FOLLOWING LINE.
@@ -94,28 +93,14 @@ public class UnclaimedCommmand implements CommandExecutor {
             return;
         }
 
-        Random random = new Random();
-        int x;
-        int z;
-        Chunk chunk;
-        int i = 0;
-        Location tpLoc = null;
-        do {
-            i++;
-            x = random.nextInt(instance.getConfiguration().getMaxX() * 2) - instance.getConfiguration().getMaxX();
-            z = random.nextInt(instance.getConfiguration().getMaxZ() * 2) - instance.getConfiguration().getMaxZ();
-            chunk = player.getWorld().getChunkAt(x, z);
-        } while ((UnclaimedRegistry.isProtected(chunk) || (tpLoc = getLocationFor(chunk)) == null) && i < 100 );
-        if (i == 100) {
-            player.sendMessage("Gave up looking for unclaimed chunk after 100 tries.");
+        Chunk chunk = instance.getUnclaimedChunk();
+        Location tpLoc = getLocationFor(chunk);
+        if (UnclaimedCommandTeleportTask.isCooling(player)) {
+            player.sendMessage("You've teleported too recently!");
         } else {
-            if (UnclaimedCommandTeleportTask.isCooling(player)) {
-                player.sendMessage("You've teleported too recently!");
-            } else {
-                Bukkit.getScheduler().runTaskLater(instance, new UnclaimedCommandTeleportTask(player), instance.getConfiguration().getTeleportCooldown() * 20);
-                player.teleport(tpLoc);
-                player.sendMessage("You've been teleported to an unclaimed area.");
-            }
+            Bukkit.getScheduler().runTaskLater(instance, new UnclaimedCommandTeleportTask(player), instance.getConfiguration().getTeleportCooldown() * 20);
+            player.teleport(tpLoc);
+            player.sendMessage("You've been teleported to an unclaimed area.");
         }
     }
 
@@ -154,7 +139,7 @@ public class UnclaimedCommmand implements CommandExecutor {
 
     private Location getLocationFor(Chunk c, int x, int z, int minY, int maxY) {
         // y is decremented by three because we need two blocks worth of space for the player to stand on.  
-        for (int y = maxY; y >= minY; y-=3) {
+        for (int y = maxY; y >= minY; y -= 3) {
             Block b = c.getBlock(x, y, z);
             if (b.getType().isSolid()) {
                 return b.getLocation().add(0, 2, 0);
