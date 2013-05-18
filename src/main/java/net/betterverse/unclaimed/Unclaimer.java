@@ -34,7 +34,7 @@ public class Unclaimer {
 		do {
 			x = random.nextInt(plugin.getConfiguration().getMaxX() * 2) - plugin.getConfiguration().getMaxX();
 			z = random.nextInt(plugin.getConfiguration().getMaxZ() * 2) - plugin.getConfiguration().getMaxZ();
-			chunk = plugin.getServer().getWorld("world").getChunkAt(x, z);
+			chunk = plugin.getServer().getWorld("world").getChunkAt(x << 4, z << 4);
 		} while ((tpLoc = getLocationFor(chunk)) == null);
 		return tpLoc;
 	}
