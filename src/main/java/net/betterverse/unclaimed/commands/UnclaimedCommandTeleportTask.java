@@ -1,22 +1,30 @@
 package net.betterverse.unclaimed.commands;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.bukkit.entity.Player;
 
-import java.util.HashSet;
-import java.util.Set;
-
 public class UnclaimedCommandTeleportTask implements Runnable {
-	private static Set<String> cooling = new HashSet<String>();
+	private static Map<String, Long> cooling = new HashMap<String, Long>();
 
 	private String player;
 
-	public UnclaimedCommandTeleportTask(Player player) {
-		cooling.add(player.getName());
+	public UnclaimedCommandTeleportTask(Player player, long endTime) {
+		cooling.put(player.getName(), endTime);
 		this.player = player.getName();
 	}
 
-	public static boolean isCooling(Player player) {
-		return cooling.contains(player.getName());
+	public static long getRemainingTime(Player player) {
+		long diff = System.currentTimeMillis() - cooling.get(player.getName());
+		if (diff < 0) {
+			cooling.remove(player.getName()); // Just in case the server is lagging
+			return 0;
+		}
+		return diff;
+	}
+
+	public static void reset(Player player) {
+		cooling.remove(player.getName());
 	}
 
 	@Override

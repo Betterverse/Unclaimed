@@ -95,11 +95,15 @@ public class UnclaimedCommmand implements CommandExecutor {
 		}
 
 		Chunk chunk = instance.getUnclaimedChunk();
-		Location tpLoc = getLocationFor(chunk);
-		if (UnclaimedCommandTeleportTask.isCooling(player)) {
-			player.sendMessage("You've teleported too recently!");
+
+		long remaining = UnclaimedCommandTeleportTask.getRemainingTime(player);
+		if (remaining > 0) {
+			player.sendMessage("You've teleported too recently! You can teleport again in " + (remaining / 1000) + " seconds.");
 		} else {
-			Bukkit.getScheduler().runTaskLater(instance, new UnclaimedCommandTeleportTask(player), instance.getConfiguration().getTeleportCooldown() * 20);
+			Location tpLoc = getLocationFor(chunk);
+			Bukkit.getScheduler().runTaskLater(instance, new UnclaimedCommandTeleportTask(player,
+					System.currentTimeMillis() + (instance.getConfiguration().getTeleportCooldown() * 1000)),
+					instance.getConfiguration().getTeleportCooldown() * 20);
 			player.teleport(tpLoc);
 			player.sendMessage("You've been teleported to an unclaimed area.");
 		}
