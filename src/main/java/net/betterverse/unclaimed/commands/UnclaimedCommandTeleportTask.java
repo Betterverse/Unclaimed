@@ -19,7 +19,7 @@ public class UnclaimedCommandTeleportTask implements Runnable {
 		if (coolTime == null) {
 			return 0;
 		}
-		long diff = System.currentTimeMillis() - coolTime;
+		long diff = coolTime - System.currentTimeMillis();
 		if (diff < 0) {
 			cooling.remove(player.getName()); // Just in case the server is lagging
 			return 0;
