@@ -6,21 +6,21 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class UnclaimedCommandTeleportTask implements Runnable {
+	private static Set<String> cooling = new HashSet<String>();
 
-    private static Set<Player> cooling = new HashSet<Player>();
-    private Player player;
+	private String player;
 
+	public UnclaimedCommandTeleportTask(Player player) {
+		cooling.add(player.getName());
+		this.player = player.getName();
+	}
 
-    public UnclaimedCommandTeleportTask(Player player) {
-        cooling.add(player);
-    }
+	public static boolean isCooling(Player player) {
+		return cooling.contains(player.getName());
+	}
 
-    public static boolean isCooling(Player player) {
-        return cooling.contains(player);
-    }
-
-    @Override
-    public void run() {
-        cooling.remove(player);
-    }
+	@Override
+	public void run() {
+		cooling.remove(player);
+	}
 }
