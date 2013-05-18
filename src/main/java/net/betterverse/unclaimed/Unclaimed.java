@@ -3,16 +3,16 @@ package net.betterverse.unclaimed;
 import net.betterverse.unclaimed.commands.UnclaimedCommmand;
 import net.betterverse.unclaimed.util.RegenerationRunnable;
 import net.betterverse.unclaimed.util.UnclaimedRegistry;
-import net.betterverse.unclaimed.util.UnclaimedRunnable;
 import net.betterverse.unclaimed.util.WorldguardWrapper;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
+import org.bukkit.Location;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Unclaimed extends JavaPlugin {
 	private Configuration configuration;
 
-	private UnclaimedRunnable unclaimer;
+	private Unclaimer unclaimer;
 
 	@Override
 	public void onEnable() {
@@ -29,6 +29,7 @@ public class Unclaimed extends JavaPlugin {
 		new RegenerationRunnable(this, getConfiguration().getActiveRegenerationWorlds()).runTaskTimer(this, getConfiguration().getRegenerationOffset() * 60 * 20, getConfiguration().getRegenerationOffset() * 3600 * 20);
 
 		//new RegenerationRunnable(this, getConfiguration().getActiveRegenerationWorlds()).runTaskTimer(this, getConfiguration().getRegenerationOffset() * 20, getConfiguration().getRegenerationOffset() * 20);
+		unclaimer = new Unclaimer(this);
 	}
 
 	public Configuration getConfiguration() {
@@ -43,7 +44,7 @@ public class Unclaimed extends JavaPlugin {
 		configuration.reload();
 	}
 
-	public Chunk getUnclaimedChunk() {
-		return unclaimer.generateUnclaimedChunk();
+	public Location getUnclaimedLocation() {
+		return unclaimer.generateUnclaimedLocation();
 	}
 }
