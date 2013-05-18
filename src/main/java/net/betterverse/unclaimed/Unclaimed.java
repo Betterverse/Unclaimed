@@ -1,8 +1,5 @@
 package net.betterverse.unclaimed;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 import net.betterverse.unclaimed.commands.UnclaimedCommmand;
 import net.betterverse.unclaimed.util.RegenerationRunnable;
 import net.betterverse.unclaimed.util.UnclaimedRegistry;
@@ -11,12 +8,11 @@ import net.betterverse.unclaimed.util.WorldguardWrapper;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitTask;
 
 public class Unclaimed extends JavaPlugin {
 	private Configuration configuration;
 
-	private List<Chunk> unclaimedChunks = new ArrayList<Chunk>();
+	private UnclaimedRunnable unclaimer;
 
 	@Override
 	public void onEnable() {
@@ -31,9 +27,6 @@ public class Unclaimed extends JavaPlugin {
 		}
 		Bukkit.getPluginManager().registerEvents(new Listener(this), this);
 		new RegenerationRunnable(this, getConfiguration().getActiveRegenerationWorlds()).runTaskTimer(this, getConfiguration().getRegenerationOffset() * 60 * 20, getConfiguration().getRegenerationOffset() * 3600 * 20);
-
-		//start the unclaimed chunk finder and run it every 1 second (20 ticks)
-		BukkitTask task = new UnclaimedRunnable(this).runTaskTimer(this, 0, 20); // Delay has to be 0 or else we could have no unclaimed chunks at a time.
 
 		//new RegenerationRunnable(this, getConfiguration().getActiveRegenerationWorlds()).runTaskTimer(this, getConfiguration().getRegenerationOffset() * 20, getConfiguration().getRegenerationOffset() * 20);
 	}
@@ -51,19 +44,6 @@ public class Unclaimed extends JavaPlugin {
 	}
 
 	public Chunk getUnclaimedChunk() {
-		Chunk c = null;
-		int i = unclaimedChunks.size(); //how many chunks are in the list
-		if (i == 0) {
-			return null; // No chunk
-		}
-		Random random = new Random();
-		int chunkID = random.nextInt(i); //randomly get a chunk
-		c = (Chunk) unclaimedChunks.get(chunkID);
-		unclaimedChunks.remove(chunkID); //remove the chunk from the list
-		return c;
-	}
-
-	public void addChunk(Chunk chunk) {
-		unclaimedChunks.add(chunk);
+		return unclaimer.generateUnclaimedChunk();
 	}
 }

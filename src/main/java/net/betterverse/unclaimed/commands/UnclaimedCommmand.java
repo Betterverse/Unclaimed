@@ -94,13 +94,19 @@ public class UnclaimedCommmand implements CommandExecutor {
 			return;
 		}
 
-		Chunk chunk = instance.getUnclaimedChunk();
 
 		long remaining = UnclaimedCommandTeleportTask.getRemainingTime(player);
 		if (remaining > 0) {
 			player.sendMessage("You've teleported too recently! You can teleport again in " + (remaining / 1000) + " seconds.");
 		} else {
-			Location tpLoc = getLocationFor(chunk);
+			Location tpLoc = null;
+			while (tpLoc == null) {
+				Chunk chunk = instance.getUnclaimedChunk();
+				if (chunk == null) {
+				}
+				getLocationFor(chunk);
+			}
+
 			Bukkit.getScheduler().runTaskLater(instance, new UnclaimedCommandTeleportTask(player,
 					System.currentTimeMillis() + (instance.getConfiguration().getTeleportCooldown() * 1000)),
 					instance.getConfiguration().getTeleportCooldown() * 20);
@@ -150,7 +156,7 @@ public class UnclaimedCommmand implements CommandExecutor {
 			Block b = c.getBlock(x, y - 1, z); // The location is the one above this block
 			Block air1 = b.getLocation().add(0, 1, 0).getBlock();
 			Block air2 = b.getLocation().add(0, 2, 0).getBlock();
-			if (!b.getType().equals(Material.AIR) && ((air1.getType().equals(Material.AIR) && air2.getType().equals(Material.AIR)) || b.getY() == b.getWorld().getMaxHeight() - 1)) { // Check for max block
+			if (b.getType().isSolid() && ((air1.getType().equals(Material.AIR) && air2.getType().equals(Material.AIR)) || b.getY() == b.getWorld().getMaxHeight() - 1)) { // Check for max block
 				return b.getLocation().add(0, 1, 0);
 			}
 		}
