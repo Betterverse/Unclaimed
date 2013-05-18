@@ -54,6 +54,11 @@
             <artifactId>worldguard</artifactId>
             <version>5.7-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>com.sk89q</groupId>
+            <artifactId>worldedit</artifactId>
+            <version>5.5.7-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -78,24 +83,6 @@
                 <configuration>
                     <source>1.6</source>
                     <target>1.6</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.9</version>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <links>
-                        <link>http://jd.bukkit.org/apidocs/</link>
-                    </links>
-                    <show>public</show>
                 </configuration>
             </plugin>
         </plugins>
