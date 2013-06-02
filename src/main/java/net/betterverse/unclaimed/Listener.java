@@ -13,7 +13,8 @@ import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
-import org.bukkit.event.player.PlayerPortalEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
 public class Listener implements org.bukkit.event.Listener {
 	private Unclaimed instance;
@@ -60,12 +61,15 @@ public class Listener implements org.bukkit.event.Listener {
 	}
 
 	@EventHandler(ignoreCancelled = true)
-	public void onEntityEnterPortal(PlayerPortalEvent e){
-		e.setCancelled(checkProtection(e.getPlayer(), e.getTo()));
-		
-		if(e.isCancelled())
+	public void onPlayerTeleport(PlayerTeleportEvent e) {
+		if(e.getCause() == TeleportCause.NETHER_PORTAL)
 		{
-			e.getPlayer().sendMessage(ChatColor.RED + "There is no valid portal on the other side");
+			e.setCancelled(checkProtection(e.getPlayer(), e.getTo()));
+
+			if(e.isCancelled())
+			{
+				e.getPlayer().sendMessage(ChatColor.RED + "There is no valid portal on the other side");
+			}
 		}
 	}
 	
