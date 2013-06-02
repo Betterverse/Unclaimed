@@ -4,17 +4,16 @@ import net.betterverse.unclaimed.commands.UnclaimedCommandTeleportTask;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.entity.EntityPortalEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
+import org.bukkit.event.player.PlayerPortalEvent;
 
 public class Listener implements org.bukkit.event.Listener {
 	private Unclaimed instance;
@@ -61,14 +60,12 @@ public class Listener implements org.bukkit.event.Listener {
 	}
 
 	@EventHandler(ignoreCancelled = true)
-	public void onEntityEnterPortal(EntityPortalEvent e){
-		if(e.getEntityType() == EntityType.PLAYER) {
-			e.getPortalTravelAgent().setCanCreatePortal(checkProtection((Player) e.getEntity(), e.getTo()));
-		}
+	public void onEntityEnterPortal(PlayerPortalEvent e){
+		e.setCancelled(checkProtection(e.getPlayer(), e.getTo()));
 		
-		if(e.getPortalTravelAgent().getCanCreatePortal())
+		if(e.isCancelled())
 		{
-			((Player) e.getEntity()).sendMessage(ChatColor.RED + "There is no valid portal on the other side");
+			e.getPlayer().sendMessage(ChatColor.RED + "There is no valid portal on the other side");
 		}
 	}
 	
