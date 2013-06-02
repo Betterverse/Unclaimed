@@ -63,10 +63,10 @@ public class Listener implements org.bukkit.event.Listener {
 	@EventHandler(ignoreCancelled = true)
 	public void onEntityEnterPortal(EntityPortalEvent e){
 		if(e.getEntityType() == EntityType.PLAYER) {
-			e.setCancelled(checkProtection((Player) e.getEntity(), e.getTo()));
+			e.getPortalTravelAgent().setCanCreatePortal(checkProtection((Player) e.getEntity(), e.getTo()));
 		}
 		
-		if(e.isCancelled())
+		if(e.getPortalTravelAgent().getCanCreatePortal())
 		{
 			((Player) e.getEntity()).sendMessage(ChatColor.RED + "There is no valid portal on the other side");
 		}
