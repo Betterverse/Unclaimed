@@ -1,11 +1,15 @@
 package net.betterverse.unclaimed;
 
 import net.betterverse.unclaimed.commands.UnclaimedCommandTeleportTask;
+
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityPortalEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.hanging.HangingPlaceEvent;
@@ -41,7 +45,7 @@ public class Listener implements org.bukkit.event.Listener {
 
 	@EventHandler
 	public void onPlayerDeath(PlayerDeathEvent event) {
-		UnclaimedCommandTeleportTask.reset((Player) event.getEntity());
+		UnclaimedCommandTeleportTask.reset(event.getEntity());
 	}
 
 	@EventHandler(ignoreCancelled = true)
@@ -56,6 +60,18 @@ public class Listener implements org.bukkit.event.Listener {
 		e.setCancelled(checkProtection(e.getPlayer(), e.getEntity().getLocation()));
 	}
 
+	@EventHandler(ignoreCancelled = true)
+	public void onEntityEnterPortal(EntityPortalEvent e){
+		if(e.getEntityType() == EntityType.PLAYER) {
+			e.setCancelled(checkProtection((Player) e.getEntity(), e.getTo()));
+		}
+		
+		if(e.isCancelled())
+		{
+			((Player) e.getEntity()).sendMessage(ChatColor.RED + "There is no valid portal on the other side");
+		}
+	}
+	
 	public boolean checkProtection(Player player, Location location) {
 		if (!player.hasPermission("unclaimed.build")) {
 			player.sendMessage(instance.getDescription().getPrefix() + " " + instance.getConfiguration().getBuildMessage());
