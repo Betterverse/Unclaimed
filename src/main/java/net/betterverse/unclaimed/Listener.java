@@ -1,6 +1,7 @@
 package net.betterverse.unclaimed;
 
 import net.betterverse.unclaimed.commands.UnclaimedCommandTeleportTask;
+import net.betterverse.unclaimed.util.UnclaimedRegistry;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -61,14 +62,12 @@ public class Listener implements org.bukkit.event.Listener {
 		e.setCancelled(checkProtection(e.getPlayer(), e.getEntity().getLocation()));
 	}
 
-	//@EventHandler(ignoreCancelled = true)
+	@EventHandler(ignoreCancelled = true)
 	public void onPlayerTeleport(PlayerPortalEvent e) {
-		System.out.println(e.getPlayer().getName() + " portalling from " + e.getFrom() + " to " + e.getTo());
-		
-		e.setCancelled(checkProtection(e.getPlayer(), e.getTo()));
-
-		if(e.isCancelled())
+		if(UnclaimedRegistry.isProtectedFromNoWG(e.getPlayer(), e.getTo()))
 		{
+			e.setCancelled(true);
+			
 			e.getPlayer().sendMessage(ChatColor.RED + "There is no valid portal on the other side");
 		}
 	}
