@@ -13,6 +13,7 @@ import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
+import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
@@ -60,16 +61,15 @@ public class Listener implements org.bukkit.event.Listener {
 		e.setCancelled(checkProtection(e.getPlayer(), e.getEntity().getLocation()));
 	}
 
-	@EventHandler(ignoreCancelled = true)
-	public void onPlayerTeleport(PlayerTeleportEvent e) {
-		if(e.getCause() == TeleportCause.NETHER_PORTAL)
-		{
-			e.setCancelled(checkProtection(e.getPlayer(), e.getTo()));
+	//@EventHandler(ignoreCancelled = true)
+	public void onPlayerTeleport(PlayerPortalEvent e) {
+		System.out.println(e.getPlayer().getName() + " portalling from " + e.getFrom() + " to " + e.getTo());
+		
+		e.setCancelled(checkProtection(e.getPlayer(), e.getTo()));
 
-			if(e.isCancelled())
-			{
-				e.getPlayer().sendMessage(ChatColor.RED + "There is no valid portal on the other side");
-			}
+		if(e.isCancelled())
+		{
+			e.getPlayer().sendMessage(ChatColor.RED + "There is no valid portal on the other side");
 		}
 	}
 	
