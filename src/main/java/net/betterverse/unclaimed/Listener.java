@@ -64,6 +64,10 @@ public class Listener implements org.bukkit.event.Listener {
 
 	@EventHandler(ignoreCancelled = true)
 	public void onPlayerTeleport(PlayerPortalEvent e) {
+		if(e.getFrom() == null || e.getTo() == null) {
+			return;
+		}
+		
 		if(UnclaimedRegistry.isProtectedFromNoWG(e.getPlayer(), e.getTo()))
 		{
 			e.setCancelled(true);
