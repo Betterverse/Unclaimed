@@ -19,16 +19,8 @@
             <url>http://repo.bukkit.org/content/groups/public/</url>
         </repository>
         <repository>
-            <id>sk89q-repo</id>
-            <url>http://maven.sk89q.com/repo/</url>
-        </repository>
-        <repository>
-            <id>spout-repo</id>
-            <url>http://nexus.spout.org/content/groups/public/</url>
-        </repository>
-        <repository>
             <id>betterverse-repo</id>
-            <url>http://dev.betterver.se/jenkins/plugin/repository/everything/</url>
+            <url>http://dev.betterver.se/nexus/content/repositories/snapshots</url>
         </repository>
     </repositories>
 
