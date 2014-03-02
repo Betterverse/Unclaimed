@@ -50,6 +50,16 @@
             <groupId>com.sk89q</groupId>
             <artifactId>worldedit</artifactId>
             <version>5.5.7-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.spout</groupId>
+                    <artifactId>vanilla</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.bukkit</groupId>
+                    <artifactId>bukkit</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 
